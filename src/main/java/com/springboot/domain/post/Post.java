@@ -34,12 +34,12 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "integer default 0")
     private Long view;
 /*
-    @OneToMany
-    @JoinColumn(name="photo_list_id")
+    @OneToMany(mappedBy = "postId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<PhotoList> photoList;
+
  */
 
-    @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "postId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 
 

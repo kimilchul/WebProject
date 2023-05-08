@@ -195,15 +195,18 @@ public class PostApiControllerTest {
         //when
         mvc.perform(multipart(url)
                 .file(json)
-                //file이 아닌 content 로 전송시 400 에러 발생
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
                 .andExpect(status().isOk());
 
+
+        Long id = postsRepository.findAllByAuthor(author).get(0).getId();
+
+        mvc.perform(delete(url+id));
+
         //then
         List<Post> all = postsRepository.findAll();
-        assertThat(all.get(0).getTitle()).isEqualTo(title);
-        assertThat(all.get(0).getContent()).isEqualTo(content);
+        assertThat(all.get(0)).isNull();
     }
 }
