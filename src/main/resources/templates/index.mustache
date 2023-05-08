@@ -1,0 +1,53 @@
+{{>layout/header}}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/post/save" role="button" class="btn btn-primary">글 등록</a>
+                {{#userName}}
+                        Logged in as: <span id="user">{{userName}}</span>
+                        <a href = "/logout" class = "btn btn-info active" role = "button">LogOut</a>
+                {{/userName}}
+                {{^userName}}
+                    <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+                {{/userName}}
+            </div>
+        </div>
+        <br>
+        <!-- 목록 출력 영역 -->
+        <table class = "table table-horizontal table-bordered">
+            <thead class = "thread-strong">
+            <tr>
+                <th>게시글번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
+                <th>추천수</th>
+                <th>댓글수</th>
+                <th>최종수정일</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {{#posts}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td><a href="/post/detail/{{id}}">{{title}}</td>
+                    <td>{{author}}</td>
+                    <td>{{view}}</td>
+                    <td>{{heart}}</td>
+                    <td>{{commentsNumber}}</td>
+                    <td>{{modifiedDate}}</td>
+                    <td><a href="/post/update/{{id}}">수정</a></td>
+                </tr>
+            {{/posts}}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+{{>layout/footer}}
