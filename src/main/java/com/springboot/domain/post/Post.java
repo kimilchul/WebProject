@@ -38,6 +38,7 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name="photo_list_id")
     private List<PhotoList> photoList;
  */
+
     @OneToMany(mappedBy = "postId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Comment> comments;
 

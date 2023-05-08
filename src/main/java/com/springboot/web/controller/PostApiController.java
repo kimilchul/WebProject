@@ -24,11 +24,6 @@ public class PostApiController {
     private final PhotoService photoService;
     private final PhotoListService photoListService;
 
-    @GetMapping("/api/v1/hello")
-    public String testApi() {
-        return "hello world";
-    }
-
     @PostMapping(value = "/api/v1/post")//consumes = MediaType.APPLICATION_JSON_VALUE
     public Long save(@RequestPart("dto")
                                  PostSaveRequestDto dto,
@@ -62,7 +57,7 @@ public class PostApiController {
         return postId;
     }
 
-    @PutMapping("/api/v1/post/{id}")
+    @PostMapping("/api/v1/post/{id}")
     public Long update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto) {
         return postService.update(id, requestDto);
     }

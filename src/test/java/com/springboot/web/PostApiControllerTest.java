@@ -5,6 +5,7 @@ import com.springboot.domain.post.Post;
 import com.springboot.domain.post.PostRepository;
 import com.springboot.web.controller.PostApiController;
 import com.springboot.web.dto.posts.PostSaveRequestDto;
+import com.springboot.web.dto.posts.PostUpdateRequestDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,9 +49,6 @@ public class PostApiControllerTest {
     private int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
-
-    @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Autowired
@@ -58,6 +56,9 @@ public class PostApiControllerTest {
 
     private MockMvc mvc;
 
+    private String title = "title";
+    private String content = "content";
+    private String author = "author";
 
     @Before
     public void setUp() {
@@ -69,38 +70,32 @@ public class PostApiControllerTest {
         postsRepository.deleteAll();
     }
 
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void Api_Connection_Test() throws Exception {
-        //given
-        String url = "http://localhost:" + port + "/api/v1/hello";
-
-        //then
-        mvc.perform(get(url)).andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
-    }
-
-    @Test
-    @WithMockUser(roles = "USER")
-    public void Posts_등록된다() throws Exception {
-        //given
-        MockMultipartFile photo = new MockMultipartFile("photo", "1683082581.jpg", "image/jpeg", "photo1".getBytes());
-        MockMultipartFile photo2 = new MockMultipartFile("photo", "photo2.jpg", "image/jpeg", "photo2".getBytes());
-
-        String title = "title";
-        String content = "content";
-        String author = "author";
-
+    private String createJsonString(String title, String content, String author){
         PostSaveRequestDto dto = PostSaveRequestDto.builder()
                 .title(title)
                 .content(content)
                 .author(author)
                 .build();
+        try{
+            return new ObjectMapper().writeValueAsString(dto);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        String dtoJson =  new ObjectMapper().writeValueAsString(dto);
+    @Test
+    @WithMockUser(roles = "USER")
+    public void Post_With_Picture() throws Exception {
+        //given
+        MockMultipartFile photo = new MockMultipartFile("photo", "1683082581.jpg", "image/jpeg", "photo1".getBytes());
+        MockMultipartFile photo2 = new MockMultipartFile("photo", "photo2.jpg", "image/jpeg", "photo2".getBytes());
+
+        String dtoJson = new ObjectMapper().writeValueAsString(createJsonString(title,content,author));
 
         //dto 전송 방식 json도 multipartFile로 보내야
-        MockMultipartFile json = new MockMultipartFile("dto", "jsondata", "application/json", dtoJson.getBytes(StandardCharsets.UTF_8));
+        MockMultipartFile json = new MockMultipartFile
+                ("dto", "jsondata", "application/json", dtoJson.getBytes(StandardCharsets.UTF_8));
 
         String url = "http://localhost:" + port + "/api/v1/post";
 
@@ -121,26 +116,40 @@ public class PostApiControllerTest {
         assertThat(all.get(0).getContent()).isEqualTo(content);
     }
 
-
     @Test
     @WithMockUser(roles = "USER")
-    public void Post_Without_Picture() throws Exception {
+    public void Post_Update() throws Exception {
         //given
-        String title = "title";
-        String content = "content";
-        PostSaveRequestDto requestDto = PostSaveRequestDto.builder()
-                .title(title)
-                .content(content)
-                .author("author")
-                .build();
+        String changedTitle = "changedTitle";
+        String changedContent = "changedContent";
+
+
+        String dtoJson = new ObjectMapper().writeValueAsString(createJsonString(title,content,author));
+
+        MockMultipartFile json = new MockMultipartFile("dto", "jsondata", "application/json", dtoJson.getBytes(StandardCharsets.UTF_8));
 
         String url = "http://localhost:" + port + "/api/v1/post";
+        String updateUrl = "http://localhost:" + port + "/api/v1/update";
 
         //when
-        mvc.perform(
-                post(url).contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(new ObjectMapper().writeValueAsString(requestDto)));
+        mvc.perform(multipart(url)
+                .file(json)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isOk());
+
+
+        PostUpdateRequestDto updateRequestDto = PostUpdateRequestDto.builder()
+                .content(changedContent)
+                .title(changedTitle)
+                .build();
+
+        Long id = postsRepository.findAllByAuthor("author").get(0).getId();
+
+        mvc.perform(put(updateUrl + "/" + id)
+
+        );
 
         //then
         List<Post> all = postsRepository.findAll();
@@ -150,34 +159,47 @@ public class PostApiControllerTest {
 
     @Test
     @WithMockUser(roles = "USER")
-    public void Posts_With_Picture() throws Exception {
+    public void Post_Without_Picture() throws Exception {
         //given
-        String title = "title";
-        String content = "content";
-        String author = "author";
+        String dtoJson = new ObjectMapper().writeValueAsString(createJsonString(title,content,author));
 
-        String url = "http://localhost:" + port + "/api/v1/posts";
+        MockMultipartFile json = new MockMultipartFile("dto", "jsondata", "application/json", dtoJson.getBytes(StandardCharsets.UTF_8));
 
-        File file = new File("images/image.jpg"); // Use an actual file path and name
-
-        MockMultipartFile imageFile = new MockMultipartFile(
-                "image",
-                file.getName(),
-                MediaType.IMAGE_JPEG_VALUE,
-                new FileInputStream(file)
-        );
-
+        String url = "http://localhost:" + port + "/api/v1/post";
 
         //when
-        mvc.perform(
-                MockMvcRequestBuilders
-                        .multipart("/api/v1/posts")
-                        .file(imageFile)
-                        .param("title", title)
-                        .param("author", author)
-                        .param("content", content))
+        mvc.perform(multipart(url)
+                .file(json)
+                //file이 아닌 content 로 전송시 400 에러 발생
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8"))
                 .andExpect(status().isOk());
 
+        //then
+        List<Post> all = postsRepository.findAll();
+        assertThat(all.get(0).getTitle()).isEqualTo(title);
+        assertThat(all.get(0).getContent()).isEqualTo(content);
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void Post_Delete() throws Exception {
+        //given
+        String dtoJson = new ObjectMapper().writeValueAsString(createJsonString(title,content,author));
+
+        MockMultipartFile json = new MockMultipartFile("dto", "jsondata", "application/json", dtoJson.getBytes(StandardCharsets.UTF_8));
+
+        String url = "http://localhost:" + port + "/api/v1/post";
+
+        //when
+        mvc.perform(multipart(url)
+                .file(json)
+                //file이 아닌 content 로 전송시 400 에러 발생
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isOk());
 
         //then
         List<Post> all = postsRepository.findAll();

@@ -2,6 +2,7 @@ package com.springboot.service.comment;
 
 import com.springboot.domain.comment.Comment;
 import com.springboot.domain.comment.CommentRepository;
+import com.springboot.domain.photo.Photo;
 import com.springboot.domain.post.Post;
 import com.springboot.domain.post.PostRepository;
 import com.springboot.web.dto.posts.CommentDto;
@@ -31,8 +32,13 @@ public class CommentService {
                 Comment.builder()
                         .postId(post)
                         .dto(commentDto)
-                        .build()
-        ).getId();
+                        .build()).getId();
     }
 
+    @Transactional
+    public Optional<Comment> findById(Long id) {
+        Optional<Comment> comment = commentRepository.findById(id);
+
+        return comment;
+    }
 }

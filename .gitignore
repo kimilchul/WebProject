@@ -3,6 +3,7 @@
 application-oauth.yml
 application-datasource.yml
 # Project exclude paths
+/images/
 /build/
 /build/classes/java/main/
 /build/classes/java/test/

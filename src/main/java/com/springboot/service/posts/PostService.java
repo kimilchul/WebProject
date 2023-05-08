@@ -65,9 +65,4 @@ public class PostService {
         return new PostResponseDto(entity);
     }
 
-    public Post findByPostId(Long id){
-        Post entity = postRepository.findById(id).orElseThrow(()->
-                new IllegalArgumentException("해당 게시물이 없습니다. id = "+id));
-        return entity;
-    }
 }
