@@ -158,6 +158,7 @@ public class PostApiControllerTest {
 
 
         //when
+<<<<<<< HEAD
         mvc.perform(
                 MockMvcRequestBuilders
                         .multipart("/api/v1/posts")
@@ -168,9 +169,22 @@ public class PostApiControllerTest {
                 .andExpect(status().isOk());
 
 
+=======
+        mvc.perform(multipart(url)
+                .file(json)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8"))
+                .andExpect(status().isOk());
+
+
+        Long id = postsRepository.findAllByAuthor(author).get(0).getId();
+
+        mvc.perform(delete(url+id));
+
+>>>>>>> 5f2080eac48cf21c311a52f3808e155bf111fcaf
         //then
         List<Post> all = postsRepository.findAll();
-        assertThat(all.get(0).getTitle()).isEqualTo(title);
-        assertThat(all.get(0).getContent()).isEqualTo(content);
+        assertThat(all.get(0)).isNull();
     }
 }
