@@ -69,7 +69,7 @@ var main = {
             alert('댓글이 등록되었습니다.');
             window.location.reload();
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            window.location.reload();
         });
     },
     heart : function () {
@@ -90,7 +90,7 @@ var main = {
             alert('추천이 등록되었습니다.');
             window.location.reload();
         }).fail(function (error) {
-            alert(JSON.stringify(error));
+            window.location.reload();
         });
     },
     update : function () {

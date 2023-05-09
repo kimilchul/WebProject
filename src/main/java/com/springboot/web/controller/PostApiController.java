@@ -57,7 +57,7 @@ public class PostApiController {
         return postId;
     }
 
-    @PostMapping("/api/v1/post/{id}")
+    @PutMapping("/api/v1/post/{id}")
     public Long update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto) {
         return postService.update(id, requestDto);
     }
