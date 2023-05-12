@@ -17,4 +17,5 @@ spring:
     jdbc.initialize-schema: always
 
   profiles:
-    include: oauth
+    include: oauth,datasource
+

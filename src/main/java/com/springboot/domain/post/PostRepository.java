@@ -16,5 +16,6 @@ public interface PostRepository extends JpaRepository<Post,Long>{
     @Query("update Post p set p.view = p.view + 1 where p.id = :id")
     int updateView(@Param("id") Long id);
 
-    List<Post> findAllByAuthor(String author);
+    @Query("SELECT p FROM Post p WHERE p.author LIKE %:author%")
+    List<Post> findAllByAuthor(@Param("author") String author);
 }
