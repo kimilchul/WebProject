@@ -20,7 +20,7 @@ public class Photo extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String origFileName;  // 파일 원본명
+    private String originalFileName;  // 파일 원본명
 
     @Column(nullable = false)
     private String filePath;  // 파일 저장 경로
@@ -28,8 +28,8 @@ public class Photo extends BaseTimeEntity {
     private Long fileSize;
 
     @Builder
-    public Photo(String origFileName, String filePath, Long fileSize){
-        this.origFileName = origFileName;
+    public Photo(String originalFileName, String filePath, Long fileSize){
+        this.originalFileName = originalFileName;
         this.filePath = filePath;
         this.fileSize = fileSize;
     }
