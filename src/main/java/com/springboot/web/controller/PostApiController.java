@@ -42,7 +42,7 @@ public class PostApiController {
                     PhotoDto.builder()
                             .filePath(filePath)
                             .fileSize(photoData.getSize())
-                            .origFileName(photoData.getOriginalFilename())
+                            .originalFileName(photoData.getOriginalFilename())
                             .build()
             );
 
