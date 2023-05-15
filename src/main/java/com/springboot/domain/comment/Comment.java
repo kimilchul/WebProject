@@ -21,10 +21,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Post postId;
+    @Column
+    private Long postId;
 
     @Column
     private String commentAuthor;
@@ -37,10 +35,10 @@ public class Comment {
     private String createdDate;
 
     @Builder
-    public Comment(CommentDto dto, Post postId){
+    public Comment(String commentContent, String commentAuthor, Long postId){
         this.postId = postId;
-        this.commentContent = dto.getCommentContent();
-        this.commentAuthor = dto.getCommentAuthor();
+        this.commentContent = commentContent;
+        this.commentAuthor = commentAuthor;
         this.createdDate = LocalDateTime.now().toString();
     }
 }

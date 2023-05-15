@@ -30,8 +30,9 @@ public class CommentService {
 
         return commentRepository.save(
                 Comment.builder()
-                        .postId(post)
-                        .dto(commentDto)
+                        .postId(post.getId())
+                        .commentAuthor(commentDto.getCommentAuthor())
+                        .commentContent(commentDto.getCommentContent())
                         .build()).getId();
     }
 

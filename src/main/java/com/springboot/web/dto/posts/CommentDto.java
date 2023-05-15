@@ -13,7 +13,7 @@ public class CommentDto {
     private String createdDate;
 
     public CommentDto(Comment comment){
-        this.postId = comment.getPostId().getId();
+        this.postId = comment.getPostId();
         this.commentAuthor = comment.getCommentAuthor();
         this.commentContent = comment.getCommentContent();
         this.createdDate = comment.getCreatedDate();

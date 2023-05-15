@@ -89,8 +89,6 @@ public class PostApiControllerTest {
         MockMultipartFile photo = new MockMultipartFile("photo", "1683082581.jpg", "image/jpeg", "photo1".getBytes());
         MockMultipartFile photo2 = new MockMultipartFile("photo", "photo2.jpg", "image/jpeg", "photo2".getBytes());
 
-
-        //dto 전송 방식 json도 multipartFile로 보내야
         MockMultipartFile json = new MockMultipartFile("dto", "jsondata", "application/json", dtoFactory().getBytes(StandardCharsets.UTF_8));
 
         String url = "http://localhost:" + port + "/api/v1/post";
@@ -129,7 +127,6 @@ public class PostApiControllerTest {
                 .file(photo)
                 .file(photo2)
                 .file(json)
-                //file이 아닌 content 로 전송시 400 에러 발생
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))
@@ -152,7 +149,6 @@ public class PostApiControllerTest {
         //when
         mvc.perform(multipart(url)
                 .file(json)
-                //file이 아닌 content 로 전송시 400 에러 발생
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8"))

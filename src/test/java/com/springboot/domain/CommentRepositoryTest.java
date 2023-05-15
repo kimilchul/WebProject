@@ -25,25 +25,43 @@ public class CommentRepositoryTest {
         commentRepository.deleteAll();
     }
 
-    /*
-    @Test
-    public void 게시글저장_불러오기() {
-        //given
-        String title = "테스트 게시물";
-        String content = "테스트 본문";
+    private String author = "author";
+    private String content = "content";
 
+    @Test
+    public void Comment_Save() {
+        //given
         commentRepository.save(Comment.builder()
-                .postId(Long.valueOf((long)1))
-        );
+                .commentAuthor(author)
+                .commentContent(content)
+                .build());
 
         //when
-        List<Post> postsList = postRepository.findAll();
+        List<Comment> commentList = commentRepository.findAll();
 
         //then
-        Post posts = postsList.get(0);
-        assertThat(posts.getTitle()).isEqualTo(title);
-        assertThat(posts.getContent()).isEqualTo(content);
+        Comment comment = commentList.get(0);
+        assertThat(comment.getCommentContent()).isEqualTo(content);
+        assertThat(comment.getCommentAuthor()).isEqualTo(author);
     }
 
-     */
+    @Test
+    public void Comment_Delete() {
+        //given
+        commentRepository.save(Comment.builder()
+                .commentAuthor(author)
+                .commentContent(content)
+                .build());
+
+        //when
+        List<Comment> commentList = commentRepository.findAll();
+        Comment comment = commentList.get(0);
+        assertThat(comment.getCommentContent()).isEqualTo(content);
+        assertThat(comment.getCommentAuthor()).isEqualTo(author);
+        commentRepository.deleteAll();
+
+        //then
+        assertThat(commentRepository.findAll().size()).isEqualTo(0);
+
+    }
 }

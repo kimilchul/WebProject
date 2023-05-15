@@ -22,16 +22,39 @@ public class PostRepositoryTest {
         postRepository.deleteAll();
     }
 
+    private String title = "title";
+    private String content = "content";
+    private String author = "author";
+
     @Test
-    public void 게시글저장_불러오기(){
+    public void Find_All_By_Author(){
         //given
-        String title = "테스트 게시물";
-        String content = "테스트 본문";
+        postRepository.save(Post.builder()
+                .title(title)
+                .content(content)
+                .author(author+"123")
+                .build());
+
+        //when
+        List<Post> postsList = postRepository.findAllByAuthor(author);
+
+        //then
+        Post posts = postsList.get(0);
+        assertThat(posts.getTitle()).isEqualTo(title);
+        assertThat(posts.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    public void Find_All(){
+        //given
+        String title = "title";
+        String content = "content";
+        String author = "author";
 
         postRepository.save(Post.builder()
         .title(title)
         .content(content)
-        .author("jojoldu@gmail.com")
+        .author(author)
         .build());
 
         //when
