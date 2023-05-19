@@ -1,4 +1,4 @@
-package com.springboot.domain;
+package com.springboot.util;
 
 public enum Categories {
     DEFAULT

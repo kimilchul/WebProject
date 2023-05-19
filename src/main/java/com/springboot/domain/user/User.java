@@ -1,6 +1,6 @@
 package com.springboot.domain.user;
 
-import com.springboot.domain.BaseTimeEntity;
+import com.springboot.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
