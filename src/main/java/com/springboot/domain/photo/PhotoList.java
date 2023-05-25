@@ -1,6 +1,7 @@
 package com.springboot.domain.photo;
 
-import com.springboot.util.Categories;
+import com.springboot.domain.Categories;
+import com.springboot.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

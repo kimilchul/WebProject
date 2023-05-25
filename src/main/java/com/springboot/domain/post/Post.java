@@ -1,8 +1,9 @@
 package com.springboot.domain.post;
 
-import com.springboot.util.BaseTimeEntity;
+import com.springboot.domain.BaseTimeEntity;
 import com.springboot.domain.heart.Heart;
 import com.springboot.domain.comment.Comment;
+import com.springboot.domain.photo.PhotoList;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

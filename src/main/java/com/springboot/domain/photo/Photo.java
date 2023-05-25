@@ -1,6 +1,6 @@
 package com.springboot.domain.photo;
 
-import com.springboot.util.BaseTimeEntity;
+import com.springboot.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

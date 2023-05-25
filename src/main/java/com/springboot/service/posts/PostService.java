@@ -4,6 +4,9 @@ import com.springboot.domain.post.Post;
 import com.springboot.domain.post.PostRepository;
 import com.springboot.web.dto.posts.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,9 +48,25 @@ public class PostService {
         return id;
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public List<PostListResponseDto> findAllDesc(){
         return postRepository.findAllDesc().stream()
+                .map(PostListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public Integer countPosts(){
+        return (int)postRepository.count();
+    }
+
+    public List<PostListResponseDto> findByPage(Integer pageNumber){
+
+        int startNumber = pageNumber; // Page number starts from 0
+        int pageSize = 10; // Number of records per page
+
+        Pageable pageable = PageRequest.of(startNumber, pageSize, Sort.by("id").ascending());
+
+        return postRepository.findPostsByPage(pageNumber).stream()//,pageable).stream()
                 .map(PostListResponseDto::new)
                 .collect(Collectors.toList());
     }
@@ -64,5 +83,6 @@ public class PostService {
                 new IllegalArgumentException("해당 게시물이 없습니다. id = "+id));
         return new PostResponseDto(entity);
     }
+
 
 }

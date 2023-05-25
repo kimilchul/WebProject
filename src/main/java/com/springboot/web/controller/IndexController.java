@@ -2,6 +2,7 @@ package com.springboot.web.controller;
 
 import com.springboot.config.auth.LoginUser;
 import com.springboot.config.auth.dto.SessionUser;
+import com.springboot.domain.post.Pagination;
 import com.springboot.service.photo.PhotoListService;
 import com.springboot.service.posts.PostService;
 import com.springboot.web.dto.posts.CommentDto;
@@ -25,12 +26,54 @@ public class IndexController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/")
-    public String index(Model model, @LoginUser SessionUser user){
-        model.addAttribute("posts",postService.findAllDesc());
+    @GetMapping("/{pageNumber}")
+    public String index(@PathVariable Integer pageNumber, Model model, @LoginUser SessionUser user){
+        model.addAttribute("posts",
+                postService.findByPage(pageNumber)
+        );
+
         if(user!=null){
             model.addAttribute("userName",user.getName());
         }
+
+        int postsPerPage=10;
+        int totalPosts = postService.countPosts();
+        int totalPages = totalPosts/postsPerPage;
+        System.out.println(totalPages + "is the total pages and "+totalPosts+" TP "+postsPerPage);
+        if(totalPosts%postsPerPage!=0){
+            totalPages+=1;
+        }
+        System.out.println("calculateasd asx sex "+totalPages);
+        Pagination pagination = Pagination.builder()
+                .endPage(totalPages)
+                .build();
+
+        model.addAttribute("pagination",pagination);
+
+        return "index";
+    }
+
+    @GetMapping("/")
+    public String index(Model model, @LoginUser SessionUser user){
+        model.addAttribute("posts",
+                postService.findByPage(Integer.valueOf(1))
+        );
+        if(user!=null){
+            model.addAttribute("userName",user.getName());
+        }
+
+        int postsPerPage=5;
+        int totalPages = (int)Math.floorDiv(postService.countPosts(),postsPerPage);
+        if(postService.countPosts()%postsPerPage!=0){
+            totalPages++;
+        }
+
+        Pagination pagination = Pagination.builder()
+                .endPage(totalPages)
+                .build();
+
+        model.addAttribute("pagination",pagination);
+
         return "index";
     }
 
@@ -60,6 +103,7 @@ public class IndexController {
 
         model.addAttribute("post", dto);
 
+        model.addAttribute("doesWahat",1);
 
         model.addAttribute("photoList", photoOriginalNameList);
 
