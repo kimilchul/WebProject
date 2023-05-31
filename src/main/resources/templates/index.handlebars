@@ -51,12 +51,12 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" href="/1" aria-label="Previous">
+                <a class="page-link" href="/{{pagination.startPage}}" aria-label="Previous">
                     <span aria-hidden="true">처음</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="/{{pagination.prevBlock}}" aria-label="Previous">
+                <a class="page-link" href="/{{pagination.previousPage}}" aria-label="Previous">
                 <span aria-hidden="true">이전</span>
                 </a>
             </li>
@@ -64,7 +64,7 @@
 
             <script>
                 const ul = document.querySelector(".pagination");
-                for (let i = {{pagination.startPage}}; i <= {{pagination.endPage}}; i++) {
+                for (let i = {{pagination.startBlock}}; i <= {{pagination.endBlock}}; i++) {
                     const li = document.createElement("li");
                     const link = document.createElement("a");
                     link.href = "/" + i;
@@ -76,15 +76,21 @@
 
 
             <li class="page-item">
-                <a class="page-link" href="/{{pagination.nextBlock}}" aria-label="Next">
+                <a class="page-link" href="/{{pagination.nextPage}}" aria-label="Next">
                 <span aria-hidden="true">다음</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="/?page={{pagination.endPage}}" aria-label="Previous">
+                <a class="page-link" href="/{{pagination.endPage}}" aria-label="Previous">
                 <span aria-hidden="true">마지막</span>
                 </a>
             </li>
+
+            <select name="postsPerPage" id="postPerPage">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
         </ul>
     </nav>
 

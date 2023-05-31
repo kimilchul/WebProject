@@ -1,4 +1,4 @@
-package com.springboot.domain;
+package com.springboot.domain.post;
 
 
 import com.springboot.domain.photo.Photo;

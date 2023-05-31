@@ -39,12 +39,11 @@ public class IndexController {
         int postsPerPage=10;
         int totalPosts = postService.countPosts();
         int totalPages = totalPosts/postsPerPage;
-        System.out.println(totalPages + "is the total pages and "+totalPosts+" TP "+postsPerPage);
         if(totalPosts%postsPerPage!=0){
             totalPages+=1;
         }
-        System.out.println("calculateasd asx sex "+totalPages);
         Pagination pagination = Pagination.builder()
+                .currentPage(pageNumber)
                 .endPage(totalPages)
                 .build();
 
@@ -62,13 +61,14 @@ public class IndexController {
             model.addAttribute("userName",user.getName());
         }
 
-        int postsPerPage=5;
+        int postsPerPage=10;
         int totalPages = (int)Math.floorDiv(postService.countPosts(),postsPerPage);
         if(postService.countPosts()%postsPerPage!=0){
             totalPages++;
         }
 
         Pagination pagination = Pagination.builder()
+                .currentPage(1)
                 .endPage(totalPages)
                 .build();
 
@@ -78,7 +78,10 @@ public class IndexController {
     }
 
     @GetMapping("/post/save")
-    public String postsSave(){
+    public String postsSave(Model model,@LoginUser SessionUser user){
+        if(user!=null){
+            model.addAttribute("userName",user.getName());
+        }
         return "post-save";
     }
 

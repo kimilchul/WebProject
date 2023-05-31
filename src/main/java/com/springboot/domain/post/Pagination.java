@@ -8,45 +8,50 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Pagination {
 
-    /** 1. 페이지 당 보여지는 게시글의 최대 개수 **/
     private int pageSize = 10;
 
-    /** 2. 페이징된 버튼의 블럭당 최대 개수 **/
     private int blockSize = 10;
 
-    /** 3. 현재 페이지 **/
-    private int page = 1;
+    private int startBlock;
 
-    /** 4. 현재 블럭 **/
-    private int block = 1;
+    private int endBlock;
 
-    /** 5. 총 게시글 수 **/
-    private int totalListCnt;
+    private int currentPage;
 
-    /** 6. 총 페이지 수 **/
-    private int totalPageCnt;
-
-    /** 7. 총 블럭 수 **/
-    private int totalBlockCnt;
-
-    /** 8. 블럭 시작 페이지 **/
     private int startPage = 1;
 
-    /** 9. 블럭 마지막 페이지 **/
-    private int endPage = 1;
+    private int endPage;
 
-    /** 10. DB 접근 시작 index **/
     private int startIndex = 0;
 
-    /** 11. 이전 블럭의 마지막 페이지 **/
-    private int prevBlock=1;
+    private int previousPage;
 
-    /** 12. 다음 블럭의 시작 페이지 **/
-    private int nextBlock=2;
+    private int nextPage;
 
 
     @Builder
-    public Pagination(int endPage){
+    public Pagination(int endPage,int currentPage){
+        if(previousPage>1){
+            this.previousPage=currentPage-1;
+        }else{
+            this.previousPage=1;
+        }
+
+        if(nextPage>endPage){
+            this.nextPage=endPage;
+        }else{
+            this.nextPage=currentPage+1;
+        }
+
+        this.startBlock = (((currentPage-1)/10)*10)+1;
+
+        if((((currentPage-1)/10)*10)+10>endPage){
+            this.endBlock = endPage;
+        }else{
+            this.endBlock = (((currentPage-1)/10)*10)+10;
+        }
+
         this.endPage = endPage;
+        this.currentPage = currentPage;
     }
 }
