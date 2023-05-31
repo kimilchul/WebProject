@@ -32,7 +32,7 @@ public class PostRepositoryTest {
         postRepository.save(Post.builder()
                 .title(title)
                 .content(content)
-                .author(author+"123")
+                .author(author)
                 .build());
 
         //when
@@ -64,5 +64,25 @@ public class PostRepositoryTest {
         Post posts = postsList.get(0);
         assertThat(posts.getTitle()).isEqualTo(title);
         assertThat(posts.getContent()).isEqualTo(content);
+    }
+
+    @Test
+    public void Paging_Test(){
+        //given
+        for(int i=0;i<12;i++){
+            postRepository.save(Post.builder()
+                    .content("content")
+                    .title("title")
+                    .author("author")
+                    .build());
+        }
+
+        int pageNumber = 1;
+
+        //when
+        List<Post> pageLoad = postRepository.findPostsByPage(1);
+
+        //then
+        assertThat(pageLoad.size()).isEqualTo(10);
     }
 }

@@ -31,21 +31,4 @@ public class IndexControllerTest {
         assertThat(body).contains("스프링 부트로 시작하는 웹 서비스");
     }
 
-    @Test
-    public void paging_test(){
-        //given
-        String body = this.restTemplate.getForObject("/",String.class);
-
-        for(int i=0;i<5;i++){
-            postRepository.save(Post.builder()
-                    .content("content")
-                    .title("title")
-                    .author("author")
-                    .build());
-        }
-        //when
-
-        //then
-    }
-
 }

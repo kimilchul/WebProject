@@ -1,0 +1,28 @@
+
+spring:
+  datasource:
+    initialization-mode: always
+    url: jdbc:mysql://localhost/~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 20MB
+
+  profiles:
+    include: oauth
+
+logging.level:
+  org.hibernate.SQL: debug
+
