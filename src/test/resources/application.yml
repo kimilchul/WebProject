@@ -20,9 +20,8 @@ spring:
       maxFileSize: 10MB
       maxRequestSize: 20MB
 
-  config:
-    activate:
-      on-profile: oauth
+  profiles:
+    include: oauth
 
 logging.level:
   org.hibernate.SQL: debug

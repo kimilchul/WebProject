@@ -16,7 +16,6 @@ spring:
     store-type: jdbc
     jdbc.initialize-schema: always
 
-  config:
-    activate:
-      on-profile: oauth,datasource
+  profiles:
+    include: oauth,datasource
 
