@@ -27,7 +27,10 @@ public class HeartService {
         User user = userWrapper.get();
 
         if(!isAlreadyHeart(user, post)) {
-            heartRepository.save(new Heart(post,user));
+            heartRepository.save(Heart.builder()
+                    .post(post)
+                    .user(user)
+                    .build());
             return true;
         }
 
