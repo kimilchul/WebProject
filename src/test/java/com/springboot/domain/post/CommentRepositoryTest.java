@@ -64,7 +64,7 @@ public class CommentRepositoryTest {
         commentRepository.deleteAll();
 
         //then
-        assertThat(commentRepository.findAll().size()).isEqualTo(0);
+        assertThat(commentRepository.findAll().isEmpty()).isEqualTo(true);
 
     }
 }

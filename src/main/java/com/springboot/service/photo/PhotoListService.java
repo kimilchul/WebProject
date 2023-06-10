@@ -18,8 +18,6 @@ import java.util.Optional;
 @Service
 public class PhotoListService {
     private final PhotoListRepository photoListRepository;
-    private final PhotoRepository photoRepository;
-    private final PostRepository postRepository;
 
     @Transactional
     public PhotoList save(PhotoListDto photoListDto) {
@@ -30,6 +28,11 @@ public class PhotoListService {
                         .photoOriginalName(photoListDto.getPhotoOriginalName())
                         .build()
         );
+    }
+
+    @Transactional
+    public void deleteAllByPostId(Long postId) {
+        photoListRepository.deleteAllByPostId(postId);
     }
 
     @Transactional
