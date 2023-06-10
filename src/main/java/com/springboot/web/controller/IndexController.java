@@ -26,75 +26,55 @@ public class IndexController {
 
     private final HttpSession httpSession;
 
-    @GetMapping("/{pageNumber}")
-    public String index(@PathVariable Integer pageNumber, Model model, @LoginUser SessionUser user){
+    @GetMapping("/main/{pageNumber}")
+    public String index(@PathVariable Integer pageNumber, Model model, @LoginUser SessionUser user) {
         model.addAttribute("posts",
                 postService.findByPage(pageNumber)
         );
 
-        if(user!=null){
-            model.addAttribute("userName",user.getName());
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
         }
 
-        int postsPerPage=10;
+        int postsPerPage = 10;
         int totalPosts = postService.countPosts();
-        int totalPages = totalPosts/postsPerPage;
-        if(totalPosts%postsPerPage!=0){
-            totalPages+=1;
+        int totalPages = totalPosts / postsPerPage;
+        if (totalPosts % postsPerPage != 0) {
+            totalPages += 1;
         }
         Pagination pagination = Pagination.builder()
                 .currentPage(pageNumber)
                 .endPage(totalPages)
                 .build();
 
-        model.addAttribute("pagination",pagination);
+        model.addAttribute("pagination", pagination);
 
         return "index";
     }
 
     @GetMapping("/")
-    public String index(Model model, @LoginUser SessionUser user){
-        model.addAttribute("posts",
-                postService.findByPage(Integer.valueOf(1))
-        );
-        if(user!=null){
-            model.addAttribute("userName",user.getName());
-        }
-
-        int postsPerPage=10;
-        int totalPages = (int)Math.floorDiv(postService.countPosts(),postsPerPage);
-        if(postService.countPosts()%postsPerPage!=0){
-            totalPages++;
-        }
-
-        Pagination pagination = Pagination.builder()
-                .currentPage(1)
-                .endPage(totalPages)
-                .build();
-
-        model.addAttribute("pagination",pagination);
-
-        return "index";
+    public String index(Model model, @LoginUser SessionUser user) {
+        return "redirect:/main/1";
     }
 
     @GetMapping("/post/save")
-    public String postsSave(Model model,@LoginUser SessionUser user){
-        if(user!=null){
-            model.addAttribute("userName",user.getName());
+    public String postsSave(Model model, @LoginUser SessionUser user) {
+        if (user != null) {
+            model.addAttribute("userName", user.getName());
         }
         return "post-save";
     }
 
     @GetMapping("/post/update/{id}")
-    public String postsUpdate(@PathVariable Long id,Model model){
+    public String postsUpdate(@PathVariable Long id, Model model) {
         PostResponseDto dto = postService.findById(id);
-        model.addAttribute("post",dto);
+        model.addAttribute("post", dto);
 
         return "post-update";
     }
 
     @GetMapping("/post/detail/{id}")
-    public String postsDetail(@PathVariable Long id, Model model,@LoginUser SessionUser user) {
+    public String postsDetail(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
 
         PostDetailDto dto = postService.detailedView(id);
 
@@ -106,7 +86,7 @@ public class IndexController {
 
         model.addAttribute("post", dto);
 
-        model.addAttribute("doesWahat",1);
+        model.addAttribute("doesWahat", 1);
 
         model.addAttribute("photoList", photoOriginalNameList);
 

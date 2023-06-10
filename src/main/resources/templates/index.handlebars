@@ -51,12 +51,12 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" href="/{{pagination.startPage}}" aria-label="Previous">
+                <a class="page-link" href="/main/{{pagination.startPage}}" aria-label="Previous">
                     <span aria-hidden="true">처음</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="/{{pagination.previousPage}}" aria-label="Previous">
+                <a class="page-link" href="/main/{{pagination.previousPage}}" aria-label="Previous">
                 <span aria-hidden="true">이전</span>
                 </a>
             </li>
@@ -67,7 +67,7 @@
                 for (let i = {{pagination.startBlock}}; i <= {{pagination.endBlock}}; i++) {
                     const li = document.createElement("li");
                     const link = document.createElement("a");
-                    link.href = "/" + i;
+                    link.href = "/main/" + i;
                     link.textContent = i;
                     li.appendChild(link);
                     ul.appendChild(li);
@@ -76,12 +76,12 @@
 
 
             <li class="page-item">
-                <a class="page-link" href="/{{pagination.nextPage}}" aria-label="Next">
+                <a class="page-link" href="/main/{{pagination.nextPage}}" aria-label="Next">
                 <span aria-hidden="true">다음</span>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="/{{pagination.endPage}}" aria-label="Previous">
+                <a class="page-link" href="/main/{{pagination.endPage}}" aria-label="Previous">
                 <span aria-hidden="true">마지막</span>
                 </a>
             </li>
