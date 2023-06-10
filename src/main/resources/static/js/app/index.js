@@ -50,6 +50,39 @@ var main = {
             alert(JSON.stringify(error));
         });
     },
+    update : function () {
+        var formData = new FormData();
+
+        var photo = $('#photo')[0].files;
+        for (var i = 0; i < photo.length; i++) {
+            formData.append('photo', photo[i]);
+        }
+
+        var dto = {
+            postId: $('#postId').val(),
+            title: $('#title').val(),
+            content: $('#content').val()
+        };
+
+        var id = $('#postId').val();
+
+        formData.append('dto', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+
+        //
+
+        $.ajax({
+            type: 'PUT',
+            url: '/api/v1/post/'+id,
+            data: formData,
+            processData: false,
+            contentType: false,
+        }).done(function() {
+            alert('글이 수정되었습니다.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
     comment : function () {
         var data = {
             postId: $('#id').val(),
@@ -91,27 +124,6 @@ var main = {
             window.location.reload();
         }).fail(function (error) {
             window.location.reload();
-        });
-    },
-    update : function () {
-        var data = {
-            title: $('#title').val(),
-            content: $('#content').val()
-        };
-
-        var id = $('#id').val();
-
-        $.ajax({
-            type: 'PUT',
-            url: '/api/v1/post/'+id,
-            dataType: 'json',
-            contentType:'application/json; charset=utf-8',
-            data: JSON.stringify(data)
-        }).done(function() {
-            alert('글이 수정되었습니다.');
-            window.location.href = '/';
-        }).fail(function (error) {
-            alert(JSON.stringify(error));
         });
     },
     delete : function () {

@@ -51,15 +51,45 @@ public class PostApiController {
                     .photoId(photoId)
                     .photoOriginalName(photoData.getOriginalFilename())
                     .build());
-
         }
 
         return postId;
     }
 
     @PutMapping("/api/v1/post/{id}")
-    public Long update(@PathVariable Long id, @RequestBody PostUpdateRequestDto requestDto) {
-        return postService.update(id, requestDto);
+    public Long update(@RequestPart("dto")
+                               PostUpdateRequestDto dto,
+                       @RequestPart("photo")
+                                   List<MultipartFile> photoDataList) {
+
+        String filePath = "images/";
+
+        photoListService.deleteAllByPostId(dto.getPostId());
+
+        for(MultipartFile photoData : photoDataList){
+            if(photoService.downloadPhoto(photoData)){
+            }
+
+            Long photoId = photoService.save(
+                    PhotoDto.builder()
+                            .filePath(filePath)
+                            .fileSize(photoData.getSize())
+                            .originalFileName(photoData.getOriginalFilename())
+                            .build()
+            );
+
+            photoListService.save(PhotoListDto.builder()
+                    .postId(dto.getPostId())
+                    .photoId(photoId)
+                    .photoOriginalName(photoData.getOriginalFilename())
+                    .build());
+        }
+
+        System.out.println(
+                dto.getPostId()+" is pos id "+dto.getTitle()+" is title"
+        );
+
+        return postService.update(dto.getPostId(), dto);
     }
 
     @DeleteMapping("/api/v1/post/{id}")
