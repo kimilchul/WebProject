@@ -58,7 +58,7 @@ public class IndexController {
     }
 
     @GetMapping("/post/save")
-    public String postsSave(Model model, @LoginUser SessionUser user) {
+    public String postSave(Model model, @LoginUser SessionUser user) {
         if (user != null) {
             model.addAttribute("userName", user.getName());
         }
@@ -66,7 +66,7 @@ public class IndexController {
     }
 
     @GetMapping("/post/update/{id}")
-    public String postsUpdate(@PathVariable Long id, Model model) {
+    public String postUpdate(@PathVariable Long id, Model model) {
         PostResponseDto dto = postService.findById(id);
         model.addAttribute("post", dto);
 
@@ -74,26 +74,27 @@ public class IndexController {
     }
 
     @GetMapping("/post/detail/{id}")
-    public String postsDetail(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
+    public String postDetail(@PathVariable Long id, Model model, @LoginUser SessionUser user) {
+        try {
+            PostDetailDto dto = postService.detailView(id);
 
-        PostDetailDto dto = postService.detailedView(id);
+            List<CommentDto> comments = dto.getComments();
+            model.addAttribute("post", dto);
+            if (comments != null && !comments.isEmpty()) {
+                model.addAttribute("comments", comments);
+            }
+        }catch (IllegalArgumentException e){
+            model.addAttribute("errorMessage", e.getMessage());
+            return "/error";
+        }
 
         String[] photoOriginalNameList = photoListService.findAllPhotoOriginalNameByPostId(id);
 
-        List<CommentDto> comments = dto.getComments();
-
         postService.updateView(id);
-
-        model.addAttribute("post", dto);
-
-        model.addAttribute("doesWahat", 1);
 
         model.addAttribute("photoList", photoOriginalNameList);
 
-        if (comments != null && !comments.isEmpty()) {
-            model.addAttribute("comments", comments);
-        }
-
+        
         if (user != null) {
             model.addAttribute("userName", user.getName());
             model.addAttribute("userEmail", user.getEmail());

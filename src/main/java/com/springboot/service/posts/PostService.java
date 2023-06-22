@@ -24,16 +24,15 @@ public class PostService {
         return postRepository.save(requestDto.toEntity()).getId();
     }
 
-    /* Views Counting */
     @Transactional
     public int updateView(Long id) {
         return postRepository.updateView(id);
     }
 
     @Transactional
-    public PostDetailDto detailedView(Long id){
-        Optional<Post> postWrapper = postRepository.findById(id);
-        Post posts = postWrapper.get();
+    public PostDetailDto detailView(Long id){
+        Post posts = postRepository.findById(id).orElseThrow(()->
+                new IllegalArgumentException("해당 게시물이 없습니다. id = "+id));
 
         return new PostDetailDto(posts);
     }
@@ -48,7 +47,7 @@ public class PostService {
         return id;
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<PostListResponseDto> findAllDesc(){
         return postRepository.findAllDesc().stream()
                 .map(PostListResponseDto::new)

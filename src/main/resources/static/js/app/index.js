@@ -127,7 +127,7 @@ var main = {
         });
     },
     delete : function () {
-        var id = $('#id').val();
+        var id = $('#postId').val();
 
         $.ajax({
             type: 'DELETE',
