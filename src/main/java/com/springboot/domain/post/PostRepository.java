@@ -25,6 +25,6 @@ public interface PostRepository extends JpaRepository<Post,Long>{
     @Query("SELECT p FROM Post p WHERE p.content LIKE %:content%")
     List<Post> findAllByContent(@Param("content") String content);
 
-    @Query(value = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY post_id DESC) as row_num FROM post) AS subquery WHERE row_num <= (:pageNumber * postPerPage) AND row_num > ((:pageNumber - 1) * postPerPage)", nativeQuery = true)
-    List<Post> findPostsByPage(@Param("pageNumber") Integer pageNumber, Integer postPerPage);//, Pageable pageable);
+    @Query(value = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY post_id DESC) as row_num FROM post) AS subquery WHERE row_num <= (:pageNumber * :postPerPage) AND row_num > ((:pageNumber - 1) * :postPerPage)", nativeQuery = true)
+    List<Post> findPostsByPage(@Param("pageNumber") Integer pageNumber,@Param("postPerPage") Integer postPerPage);//, Pageable pageable);
 }
