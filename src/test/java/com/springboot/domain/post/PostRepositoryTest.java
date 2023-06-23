@@ -4,6 +4,8 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -13,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class PostRepositoryTest {
     @Autowired
     PostRepository postRepository;
@@ -80,7 +83,7 @@ public class PostRepositoryTest {
         int pageNumber = 1;
 
         //when
-        List<Post> pageLoad = postRepository.findPostsByPage(1);
+        List<Post> pageLoad = postRepository.findPostsByPage(1,10);
 
         //then
         assertThat(pageLoad.size()).isEqualTo(10);

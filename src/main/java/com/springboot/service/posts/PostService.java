@@ -65,7 +65,7 @@ public class PostService {
 
         Pageable pageable = PageRequest.of(startNumber, pageSize, Sort.by("id").ascending());
 
-        return postRepository.findPostsByPage(pageNumber).stream()//,pageable).stream()
+        return postRepository.findPostsByPage(pageNumber, 10).stream()//,pageable).stream()
                 .map(PostListResponseDto::new)
                 .collect(Collectors.toList());
     }
