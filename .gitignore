@@ -2,8 +2,11 @@
 .idea
 application-oauth.yml
 application-datasource.yml
+application-recaptcha.yml
 # Project exclude paths
 /images/
 /build/
 /build/classes/java/main/
 /build/classes/java/test/
+/src/main/resources/private/**
+/src/main/java/com/springboot/config/auth/recaptcha/**

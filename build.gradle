@@ -41,6 +41,8 @@ dependencies{
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+    implementation 'com.google.cloud:google-cloud-recaptchaenterprise:1.0.0' // 리캡챠 라이브러리
+
     implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
     
     implementation('com.h2database:h2')

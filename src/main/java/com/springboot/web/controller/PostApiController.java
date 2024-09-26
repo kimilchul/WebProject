@@ -11,11 +11,17 @@ import com.springboot.web.dto.posts.PostResponseDto;
 import com.springboot.web.dto.posts.PostSaveRequestDto;
 import com.springboot.web.dto.posts.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,12 +30,23 @@ public class PostApiController {
     private final PhotoService photoService;
     private final PhotoListService photoListService;
 
+    @Value("${recaptcha.secret}")
+    private String recaptchaSecret;
+
     @PostMapping(value = "/api/v1/post")//consumes = MediaType.APPLICATION_JSON_VALUE
     public Long save(@RequestPart("dto")
                                  PostSaveRequestDto dto,
                      @RequestPart("photo")
-                             List<MultipartFile> photoDataList
+                             List<MultipartFile> photoDataList,
+                     @RequestParam("g-recaptcha-response")
+                         String recaptchaResponse
     ){
+        // 1. reCAPTCHA 검증
+        boolean recaptchaValid = verifyRecaptcha(recaptchaResponse);
+        if (!recaptchaValid) {
+            throw new RuntimeException("reCAPTCHA validation failed");
+        }
+
 
         String filePath = "images/";
         Long postId = postService.save(dto);
@@ -54,6 +71,20 @@ public class PostApiController {
         }
 
         return postId;
+    }
+
+    // reCAPTCHA 검증 메서드
+    private boolean verifyRecaptcha(String recaptchaResponse) {
+        String url = "https://www.google.com/recaptcha/api/siteverify";
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("secret", recaptchaSecret);
+        params.add("response", recaptchaResponse);
+
+        // Google reCAPTCHA API 호출
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, params, Map.class);
+        Map<String, Object> body = response.getBody();
+        return body != null && (Boolean) body.get("success");
     }
 
     @PutMapping("/api/v1/post/{id}")

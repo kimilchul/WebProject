@@ -2,7 +2,15 @@ var main = {
     init : function () {
         var _this = this;
         $('#btn-save').on('click', function () {
-            _this.save();
+
+            grecaptcha.ready(function() {
+                $('#btn-save').on('click', function() {
+                    grecaptcha.execute('6LcmlE0qAAAAAGdY6oywYOk3r7LcEOl4lCucDYyA', {action: 'submit'}).then(function(token) {
+                        _this.save(token);// reCAPTCHA 토큰을 받아서 onSubmit 함수 호출
+                        //버튼을 두번 눌려야 작동함
+                    });
+                });
+            });
         });
 
         $('#btn-heart').on('click', function () {
@@ -21,7 +29,7 @@ var main = {
             _this.delete();
         });
     },
-    save : function () {
+    save : function onSubmit (token) {
         var formData = new FormData();
 
         var photo = $('#photo')[0].files;
@@ -36,6 +44,7 @@ var main = {
         };
 
         formData.append('dto', new Blob([JSON.stringify(dto)], { type: 'application/json' }));
+        formData.append('g-recaptcha-response', token);
 
         $.ajax({
             type: 'POST',
