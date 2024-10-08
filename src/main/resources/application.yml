@@ -6,6 +6,15 @@ spring:
       maxFileSize: 10MB
       maxRequestSize: 20MB
 
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health
+    endpoint:
+      health:
+        show-details: ALWAYS
+
   jpa:
     properties:
       hibernate:
