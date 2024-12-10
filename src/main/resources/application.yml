@@ -28,3 +28,6 @@ spring:
   profiles:
     include: oauth,datasource,recaptcha
 
+server:
+  forward-headers-strategy: native
+  use-forward-headers: true
