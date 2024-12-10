@@ -4,7 +4,7 @@ application-oauth.yml
 application-datasource.yml
 application-recaptcha.yml
 # Project exclude paths
-/images/
+/images/**
 /build/
 /build/classes/java/main/
 /build/classes/java/test/
