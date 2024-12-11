@@ -10,8 +10,8 @@ import java.io.File;
 public class DirectoryConfig implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
-        File directory = new File("/images");
+        String currentDir = System.getProperty("user.dir");
+        File directory = new File(currentDir+"/images");
 
         if (!directory.exists()) {
             directory.mkdir();
