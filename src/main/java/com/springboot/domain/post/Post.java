@@ -4,6 +4,7 @@ import com.springboot.domain.BaseTimeEntity;
 import com.springboot.domain.heart.Heart;
 import com.springboot.domain.comment.Comment;
 import com.springboot.domain.photo.PhotoList;
+import com.springboot.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class Post extends BaseTimeEntity {
     @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    private User userId;
 
     @Column(length = 500,nullable = false)
     private String title;
@@ -47,8 +51,9 @@ public class Post extends BaseTimeEntity {
     private Set<Heart> heart = new HashSet<>();
 
     @Builder
-    public Post(String title, String content, String author){
+    public Post(String title,User userId, String content, String author){
         this.title = title;
+        this.userId = userId;
         this.content = content;
         this.author = author;
         this.view = 0L;
@@ -57,6 +62,5 @@ public class Post extends BaseTimeEntity {
     public void update(String title,String content){
         this.title = title;
         this.content = content;
-
     }
 }

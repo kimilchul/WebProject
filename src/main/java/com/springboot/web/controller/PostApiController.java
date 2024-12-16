@@ -6,10 +6,7 @@ import com.springboot.service.photo.PhotoListService;
 import com.springboot.service.photo.PhotoService;
 import com.springboot.service.posts.PostService;
 import com.springboot.web.dto.PhotoDto;
-import com.springboot.web.dto.posts.PhotoListDto;
-import com.springboot.web.dto.posts.PostResponseDto;
-import com.springboot.web.dto.posts.PostSaveRequestDto;
-import com.springboot.web.dto.posts.PostUpdateRequestDto;
+import com.springboot.web.dto.posts.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +38,6 @@ public class PostApiController {
                      @RequestParam("g-recaptcha-response")
                          String recaptchaResponse
     ){
-        // 1. reCAPTCHA 검증
         boolean recaptchaValid = verifyRecaptcha(recaptchaResponse);
         if (!recaptchaValid) {
             throw new RuntimeException("reCAPTCHA validation failed");
@@ -71,20 +67,6 @@ public class PostApiController {
         }
 
         return postId;
-    }
-
-    // reCAPTCHA 검증 메서드
-    private boolean verifyRecaptcha(String recaptchaResponse) {
-        String url = "https://www.google.com/recaptcha/api/siteverify";
-        RestTemplate restTemplate = new RestTemplate();
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("secret", recaptchaSecret);
-        params.add("response", recaptchaResponse);
-
-        // Google reCAPTCHA API 호출
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, params, Map.class);
-        Map<String, Object> body = response.getBody();
-        return body != null && (Boolean) body.get("success");
     }
 
     @PutMapping("/api/v1/post/{id}")
@@ -124,13 +106,27 @@ public class PostApiController {
     }
 
     @DeleteMapping("/api/v1/post/{id}")
-    public Long delete(@PathVariable Long id) {
-        postService.delete(id);
-        return id;
+    public Long delete(@RequestBody PostDeleteRequestDto dto) {
+        postService.delete(dto);
+        return dto.getPostId();
     }
 
     @GetMapping("/api/v1/post/{id}")
     public PostResponseDto findById(@PathVariable Long id) {
         return postService.findById(id);
+    }
+
+    // reCAPTCHA 검증 메서드
+    private boolean verifyRecaptcha(String recaptchaResponse) {
+        String url = "https://www.google.com/recaptcha/api/siteverify";
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("secret", recaptchaSecret);
+        params.add("response", recaptchaResponse);
+
+        // Google reCAPTCHA API 호출
+        ResponseEntity<Map> response = restTemplate.postForEntity(url, params, Map.class);
+        Map<String, Object> body = response.getBody();
+        return body != null && (Boolean) body.get("success");
     }
 }

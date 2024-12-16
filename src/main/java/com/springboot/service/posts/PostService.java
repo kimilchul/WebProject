@@ -2,6 +2,8 @@ package com.springboot.service.posts;
 
 import com.springboot.domain.post.Post;
 import com.springboot.domain.post.PostRepository;
+import com.springboot.domain.user.User;
+import com.springboot.domain.user.UserRepository;
 import com.springboot.web.dto.posts.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,10 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long save(PostSaveRequestDto requestDto){
-        return postRepository.save(requestDto.toEntity()).getId();
+        User user = userRepository.findByName(requestDto.getAuthor()).get();
+
+        return postRepository.save(requestDto.toEntity(user)).getId();
     }
 
     @Transactional
@@ -71,10 +76,15 @@ public class PostService {
     }
 
     @Transactional
-    public void delete(Long id){
-        Post posts = postRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("해당 게시글이 없습니다. id = "+id));
-        postRepository.delete(posts);
+    public void delete(PostDeleteRequestDto dto){
+        Post post = postRepository.findById(dto.getPostId()).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 없습니다. id = "+dto.getPostId()));
+
+        if(!post.getAuthor().equals(dto.getUserName())){
+            throw new IllegalArgumentException("권한이 없습니다. name = "+dto.getUserName());
+        }
+
+        postRepository.delete(post);
     }
 
     public PostResponseDto findById(Long id){
